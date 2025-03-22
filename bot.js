@@ -8,7 +8,7 @@ const bot = new TelegramBot(token, { polling: true });
 
 // Listen for any kind of message. There are different kinds of messages.
 bot.onText(//start/, (msg) => {
-    const chatId = msg.chat.id;
+    
 
     // Send a welcome message and a link to your channel
     const welcomeMessage = `
@@ -21,7 +21,7 @@ To get started, join our channel: [Your Channel Name](https://t.me/tcronebhackx)
 
 // Optional: Add more commands or functionalities as needed
 bot.onText(//help/, (msg) => {
-    const chatId = msg.chat.id;
+    
     const helpMessage = `
 Here are some commands you can use:
 /start - Start the bot and get a link to our channel

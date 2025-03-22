@@ -1,9 +1,7 @@
-const TelegramBot = require('node-telegram-bot-api');
+// pages/api/telegram.js
+import TelegramBot from 'node-telegram-bot-api';
 
-// Replace with your bot token from BotFather
-const token = 'YOUR_TELEGRAM_BOT_TOKEN'; // Make sure to replace this with your actual token
-
-// Create a bot that uses 'polling' to fetch new updates
+const token = process.env.TELEGRAM_BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 
 // Array of random facts
@@ -15,7 +13,7 @@ const facts = [
     "The Eiffel Tower can be 15 cm taller during the summer."
 ];
 
-// Array of corresponding image URLs (you can replace these with your own images)
+// Array of corresponding image URLs
 const images = [
     "https://example.com/honey.jpg",
     "https://example.com/bananas.jpg",
@@ -24,34 +22,36 @@ const images = [
     "https://example.com/eiffel_tower.jpg"
 ];
 
-// Listen for the /start command
-bot.onText(//start/, (msg) => {
+// Handle incoming updates from Telegram
+bot.on('message', (msg) => {
     const chatId = msg.chat.id;
 
-    // Generate a random index
-    const randomIndex = Math.floor(Math.random() * facts.length);
-
-    // Prepare the welcome message and random fact
-    const welcomeMessage = `
+    // Check if the message is a command
+    if (msg.text === '/start') {
+        const randomIndex = Math.floor(Math.random() * facts.length);
+        
+        const welcomeMessage = `
 Welcome to our bot! 🎉
 Here's a random fact for you:
 ${facts[randomIndex]}
 `;
 
-    // Send the welcome message
-    bot.sendMessage(chatId, welcomeMessage);
+        // Send the welcome message
+        bot.sendMessage(chatId, welcomeMessage);
 
-    // Send a random image
-    bot.sendPhoto(chatId, images[randomIndex]);
-});
-
-// Optional: Add more commands or functionalities as needed
-bot.onText(//help/, (msg) => {
-    const chatId = msg.chat.id;
-    const helpMessage = `
+        // Send a random image
+        bot.sendPhoto(chatId, images[randomIndex]);
+    } else if (msg.text === '/help') {
+        const helpMessage = `
 Here are some commands you can use:
 /start - Start the bot and get a random fact and picture
 /help - Get help information
 `;
-    bot.sendMessage(chatId, helpMessage);
+        bot.sendMessage(chatId, helpMessage);
+    }
 });
+
+// Export a default handler for Next.js
+export default function handler(req, res) {
+    res.status(200).json({ message: 'Telegram bot is running...' });
+}
